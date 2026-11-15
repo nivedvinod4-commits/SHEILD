@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SHEILD | Astronaut Health Monitor</title>
+<style>
+:root{--bg:#071321;--panel:#102238;--panel2:#142c45;--line:#294862;--txt:#eff7ff;--muted:#a8bbce;--cyan:#55dff0;--green:#5ee0a0;--amber:#ffd166;--red:#ff7185}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0,#173d5b 0,transparent 42%),var(--bg);color:var(--txt);font:15px/1.5 system-ui,Segoe UI,Arial,sans-serif}
+header{padding:20px max(18px,calc((100vw - 1120px)/2));display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:15px;flex-wrap:wrap}
+.brand{display:flex;gap:12px;align-items:center}.logo{width:44px;height:44px;border:1px solid var(--cyan);border-radius:13px;display:grid;place-items:center;color:var(--cyan);font-size:23px;font-weight:800}h1{font-size:20px;letter-spacing:2px;margin:0}.tag{font-size:11px;color:var(--muted);letter-spacing:1.5px}.demo{border:1px solid #3d6c88;border-radius:99px;padding:7px 12px;color:var(--cyan);font-size:12px}
+main{max-width:1120px;margin:auto;padding:26px 18px 50px}.heading{display:flex;justify-content:space-between;gap:15px;align-items:end;flex-wrap:wrap;margin-bottom:20px}h2{font-size:27px;margin:0 0 4px}.muted{color:var(--muted);margin:0}.time{color:var(--muted);font-size:13px}
+.notice{background:#102b42;border:1px solid #315875;border-radius:12px;padding:12px 15px;color:#d4f3ff;font-size:13px;margin-bottom:17px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.card{background:linear-gradient(145deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 12px 28px #0002}.metrichead{display:flex;justify-content:space-between;color:var(--muted);font-size:13px}.ico{color:var(--cyan);font-size:19px}.value{font-size:31px;font-weight:750;margin:10px 0 0}.unit{font-size:13px;color:var(--muted);font-weight:500}.state{font-size:12px;color:var(--green)}.state.warn{color:var(--amber)}.state.bad{color:var(--red)}
+.columns{display:grid;grid-template-columns:1.05fr .95fr;gap:13px;margin-top:13px}.card h3{font-size:16px;margin:0 0 14px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}input{width:100%;border:1px solid #3a5874;background:#091827;color:var(--txt);border-radius:9px;padding:10px;font:inherit;min-width:0}input:focus{outline:1px solid var(--cyan)}.bp{display:flex;gap:7px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}button{border:0;border-radius:9px;padding:10px 14px;background:var(--cyan);color:#06202b;font-weight:750;cursor:pointer}button.alt{background:#203d58;color:var(--txt);border:1px solid #3c5a76}
+.alert{padding:11px 12px;border-radius:10px;margin:0 0 8px;background:#0a1b2c;border:1px solid var(--line);font-size:13px;color:var(--muted)}.alert.good{border-color:#28694f;color:#b5f4d4}.alert.warn{border-color:#8d7132;color:#ffe3a1}.alert.bad{border-color:#873e50;color:#ffb9c2}
+.history{margin-top:13px}.log{max-height:220px;overflow:auto}.entry{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding:9px 0;font-size:12px;color:var(--muted)}.entry b{color:var(--txt)}
+footer{text-align:center;color:#7892aa;font-size:11px;margin-top:19px}
+@media(max-width:800px){.metrics{grid-template-columns:repeat(2,1fr)}.columns{grid-template-columns:1fr}}@media(max-width:430px){.metrics,.fields{grid-template-columns:1fr}h2{font-size:23px}}
+</style></head>
+<body>
+<header><div class="brand"><div class="logo">S</div><div><h1>SHEILD</h1><div class="tag">SPACE MISSION HEALTH MONITOR</div></div></div><div class="demo">● STUDENT DEMO SIMULATION</div></header>
+<main>
+<div class="heading"><div><h2>Astronaut Health Dashboard</h2><p class="muted">A prototype interface for observing astronaut vital-sign readings.</p></div><div class="time" id="missionTime">Mission clock</div></div>
+<div class="notice">⚠ Prototype disclaimer: values are manually entered or simulated. This demonstration is not a medical device and must not be used for real medical decisions.</div>
+<section class="metrics">
+<div class="card"><div class="metrichead">Heart rate <span class="ico">♡</span></div><div class="value" id="hrValue">72 <span class="unit">bpm</span></div><div class="state" id="hrState">● Example range OK</div></div>
+<div class="card"><div class="metrichead">Blood oxygen (SpO₂) <span class="ico">◉</span></div><div class="value" id="spoValue">98 <span class="unit">%</span></div><div class="state" id="spoState">● Example range OK</div></div>
+<div class="card"><div class="metrichead">Body temperature <span class="ico">♨</span></div><div class="value" id="tempValue">36.8 <span class="unit">°C</span></div><div class="state" id="tempState">● Example range OK</div></div>
+<div class="card"><div class="metrichead">Blood pressure <span class="ico">⌁</span></div><div class="value" id="bpValue">120/80 <span class="unit">mmHg</span></div><div class="state" id="bpState">● Example range OK</div></div>
+</section>
+<section class="columns">
+<div class="card"><h3>Enter sample readings</h3><div class="fields">
+<div><label for="hr">Heart rate (bpm)</label><input id="hr" type="number" min="1" value="72"></div>
+<div><label for="spo">Blood oxygen (%)</label><input id="spo" type="number" min="1" max="100" value="98"></div>
+<div><label for="temp">Body temperature (°C)</label><input id="temp" type="number" step=".1" min="1" value="36.8"></div>
+<div><label>Blood pressure (mmHg)</label><div class="bp"><input id="sys" type="number" aria-label="Systolic" value="120"><input id="dia" type="number" aria-label="Diastolic" value="80"></div></div>
+</div><div class="actions"><button id="update">Update readings</button><button class="alt" id="simulate">Simulate sample</button><button class="alt" id="reset">Reset</button></div></div>
+<div class="card"><h3>Health status & alerts</h3><div id="overall" class="alert good">All readings are within the example demo ranges.</div><div id="alerts"><div class="alert good">No alerts at this time.</div></div><p class="muted" style="font-size:11px;margin:12px 0 0">Illustrative thresholds only. Real monitoring needs validated devices, medical review and mission-specific standards.</p></div>
+</section>
+<section class="card history"><h3>Recent monitoring history</h3><div class="log" id="history"><div class="entry"><b>Initial demo</b><span>72 bpm · 98% SpO₂</span></div></div></section>
+<footer>SHEILD • Student prototype for the NASA Space Apps Challenge • Not for clinical use</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id), defaults={hr:72,spo:98,temp:36.8,sys:120,dia:80};
+function status(id,level,msg){$(id).className='state '+(level==='bad'?'bad':level==='warn'?'warn':'');$(id).textContent='● '+msg}
+function update(){
+ const v={hr:Number($('hr').value),spo:Number($('spo').value),temp:Number($('temp').value),sys:Number($('sys').value),dia:Number($('dia').value)};
+ if(Object.values(v).some(n=>!Number.isFinite(n)||n<=0)){alert('Please enter valid positive numbers for every reading.');return}
+ $('hrValue').innerHTML=`${v.hr} <span class="unit">bpm</span>`;$('spoValue').innerHTML=`${v.spo} <span class="unit">%</span>`;$('tempValue').innerHTML=`${v.temp.toFixed(1)} <span class="unit">°C</span>`;$('bpValue').innerHTML=`${v.sys}/${v.dia} <span class="unit">mmHg</span>`;
+ const c=[
+ ['hrState',v.hr<50||v.hr>120?'bad':v.hr<60||v.hr>100?'warn':'good',v.hr<50||v.hr>120?'Outside example range':v.hr<60||v.hr>100?'Check example range':'Example range OK'],
+ ['spoState',v.spo<90?'bad':v.spo<95?'warn':'good',v.spo<90?'Low example reading':v.spo<95?'Below preferred demo level':'Example range OK'],
+ ['tempState',v.temp<35||v.temp>38?'bad':v.temp<36||v.temp>37.5?'warn':'good',v.temp<35||v.temp>38?'Outside example range':v.temp<36||v.temp>37.5?'Check example range':'Example range OK'],
+ ['bpState',v.sys<90||v.sys>=140||v.dia<60||v.dia>=90?'warn':'good',v.sys<90||v.sys>=140||v.dia<60||v.dia>=90?'Outside example range':'Example range OK']
+ ];c.forEach(x=>status(...x));
+ const issues=c.filter(x=>x[1]!=='good');$('overall').className='alert '+(issues.some(x=>x[1]==='bad')?'bad':issues.length?'warn':'good');$('overall').textContent=issues.length?`${issues.length} reading(s) need attention in this demo.`:'All readings are within the example demo ranges.';
+ $('alerts').innerHTML=issues.length?issues.map(x=>`<div class="alert ${x[1]}">${x[2]}</div>`).join(''):'<div class="alert good">No alerts at this time.</div>';
+ const e=document.createElement('div');e.className='entry';e.innerHTML=`<b>${new Date().toLocaleTimeString()}</b><span>${v.hr} bpm · ${v.spo}% · ${v.temp.toFixed(1)}°C · ${v.sys}/${v.dia}</span>`;$('history').prepend(e);
+}
+function simulate(){const s=[{hr:76,spo:97,temp:36.9,sys:118,dia:78},{hr:108,spo:94,temp:37.7,sys:132,dia:86},{hr:132,spo:88,temp:38.4,sys:145,dia:94}][Math.floor(Math.random()*3)];Object.keys(s).forEach(k=>$(k).value=s[k]);update()}
+function reset(){Object.keys(defaults).forEach(k=>$(k).value=defaults[k]);update()}
+$('update').addEventListener('click',update);$('simulate').addEventListener('click',simulate);$('reset').addEventListener('click',reset);
+function tick(){$('missionTime').textContent='Local demo time · '+new Date().toLocaleTimeString()}tick();setInterval(tick,1000);update();
+</script></body></html>
